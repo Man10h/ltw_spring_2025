@@ -2,28 +2,11 @@ import React from "react";
 import { Typography, Divider } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import models from "../../modelData/models";
-function importAll(r) {
-  return r.keys().map(r);
-}
-const images = importAll(require.context('../../images', false, /\.(png|jpe?g|svg)$/));
-console.log(images);
+
 function formatDate(dateStr) {
-  return new Date(dateStr).toLocaleString(); 
+  return new Date(dateStr).toLocaleString();
 }
-function buildImageMap(images) {
-  const imageMap = {};
 
-  images.forEach((path) => {
-    const matches = path.match(/\/([^/]+)\.[a-z0-9]+\.(jpg|png|jpeg|gif)$/);
-    if (matches) {
-      const originalName = matches[1] + "." + matches[2]; // e.g., kenobi1.jpg
-      imageMap[originalName] = path; // e.g., imageMap["kenobi1.jpg"] = "/static/media/kenobi1.xxxx.jpg"
-    }
-  });
-
-  return imageMap;
-}
-const imageMap = buildImageMap(images);
 function UserPhotos() {
   const { userId } = useParams();
   const photos = models.photoOfUserModel(userId);
@@ -35,8 +18,9 @@ function UserPhotos() {
       </Typography>
       {photos.map((photo) => (
         <div key={photo._id} style={{ marginBottom: "20px" }}>
+          {/* Sử dụng ảnh từ thư mục public/images */}
           <img
-            src={imageMap[photo.file_name]}
+            src={`/images/${photo.file_name}`}
             alt=""
             style={{ maxWidth: "100%", maxHeight: "400px" }}
           />
