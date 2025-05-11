@@ -1,14 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Typography} from "@mui/material";
-import models from '../../modelData/models'; // Giả sử bạn có model dữ liệu ở đây
+import { Typography } from "@mui/material";
 
 function UserDetail() {
-  // Lấy userId từ URL params
   const { userId } = useParams();
+  const [user, setUser] = useState(null);
 
-  // Lấy thông tin người dùng từ model (giả sử mô hình đã được định nghĩa)
-  const user = models.userModel(userId); // Đây là nơi bạn lấy dữ liệu người dùng từ model
+  // Fetch user details from the backend API
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch(`http://localhost:8081/api/user/${userId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data);
+        } else {
+          console.error('Error fetching user:', await response.text());
+          setUser(null);
+        }
+      } catch (error) {
+        console.error('Error fetching user:', error);
+        setUser(null);
+      }
+    };
+
+    fetchUser();
+  }, [userId]);
 
   return (
     <div>
@@ -20,7 +37,6 @@ function UserDetail() {
           <Typography variant="body1">Location: {user.location}</Typography>
           <Typography variant="body1">Description: {user.description}</Typography>
           <Typography variant="body1">Occupation: {user.occupation}</Typography>
-          
           <Link to={`/photos/${user._id}`}>View Photos</Link>
         </>
       ) : (
