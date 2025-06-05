@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Typography } from "@mui/material";
-import './styles.css';
+import "./styles.css";
 
 function UserDetail() {
   const { userId } = useParams();
@@ -14,27 +14,29 @@ function UserDetail() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch(`http://localhost:8081/api/user/${userId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+        const response = await fetch(
+          `https://q9zp2l-8081.csb.app/api/user/${userId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
           }
-        });
+        );
         if (response.ok) {
           const data = await response.json();
           setUser(data);
         } else {
-          if(response.status === 401 || response.status === 403){
+          if (response.status === 401 || response.status === 403) {
             nav("/login");
-          }
-          else {
+          } else {
             const data = await response.json();
             setMessage(data.message);
           }
         }
       } catch (error) {
-        console.error('Error fetching user:', error);
+        console.error("Error fetching user:", error);
         setMessage(error);
       }
     };
@@ -42,7 +44,7 @@ function UserDetail() {
     fetchUser();
   }, [userId]);
 
-   return (
+  return (
     <div className="user-detail-container">
       {user ? (
         <>

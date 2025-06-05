@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Typography, Divider } from "@mui/material";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import './styles.css';
+import "./styles.css";
 
 function formatDate(dateStr) {
   return new Date(dateStr).toLocaleString();
@@ -23,18 +23,20 @@ function UserPhotos() {
   useEffect(() => {
     const fetchPhotos = async () => {
       try {
-        const photoResponse = await fetch(`http://localhost:8081/api/photo/photosOfUser/${userId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+        const photoResponse = await fetch(
+          `https://q9zp2l-8081.csb.app/api/photo/photosOfUser/${userId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
           }
-        });
+        );
         if (!photoResponse.ok) {
-          if(photoResponse.status === 401 || photoResponse.status === 403){
+          if (photoResponse.status === 401 || photoResponse.status === 403) {
             nav("/login");
-          }
-          else {
+          } else {
             const data = await photoResponse.json();
             setMessage(data.message);
             return;
@@ -49,18 +51,20 @@ function UserPhotos() {
 
     const fetchUser = async () => {
       try {
-        const userResponse = await fetch(`http://localhost:8081/api/user/${userId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+        const userResponse = await fetch(
+          `https://q9zp2l-8081.csb.app/api/user/${userId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
           }
-        });
-        if (!userResponse.ok){
-          if(userResponse.status === 401 || userResponse.status === 403){
+        );
+        if (!userResponse.ok) {
+          if (userResponse.status === 401 || userResponse.status === 403) {
             nav("/login");
-          }
-          else {
+          } else {
             const data = await userResponse.json();
             setMessage(data.message);
             return;
@@ -91,15 +95,15 @@ function UserPhotos() {
 
     userIds.forEach(async (id) => {
       try {
-        const res = await fetch(`http://localhost:8081/api/user/${id}`, {
+        const res = await fetch(`https://q9zp2l-8081.csb.app/api/user/${id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
         if (!res.ok) {
-          if(res.status === 401 || res.status === 403){
+          if (res.status === 401 || res.status === 403) {
             nav("/login");
           }
         }
@@ -117,22 +121,24 @@ function UserPhotos() {
   //
   const commentHandle = async (id) => {
     try {
-      const res = await fetch(`http://localhost:8081/api/photo/commentsOfPhoto/${id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          comment: content,
-          user_id: user_id
-        })
-      });
-      if(!res.ok){
-        if(res.status === 401 || res.status === 403){
-          nav("/login");
+      const res = await fetch(
+        `https://q9zp2l-8081.csb.app/api/photo/commentsOfPhoto/${id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            comment: content,
+            user_id: user_id,
+          }),
         }
-        else {
+      );
+      if (!res.ok) {
+        if (res.status === 401 || res.status === 403) {
+          nav("/login");
+        } else {
           const data = await res.json();
           setMessage(data.message);
           return;
@@ -140,11 +146,11 @@ function UserPhotos() {
       }
       const data = await res.json();
       setMessage(data.message);
-      setTrigger((pre) => (!pre));
+      setTrigger((pre) => !pre);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <div className="photos-container">
@@ -152,7 +158,7 @@ function UserPhotos() {
       {photos.map((photo) => (
         <div key={photo._id} className="photo-card">
           <img
-            src={`http://localhost:8081/images/${photo.file_name}`}
+            src={`https://q9zp2l-8081.csb.app/images/${photo.file_name}`}
             alt=""
             className="photo-image"
           />
