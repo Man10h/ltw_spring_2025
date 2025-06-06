@@ -48,29 +48,23 @@ function UserDetail() {
     <div className="user-detail-container">
       {user ? (
         <>
-          <Typography variant="h5" className="user-detail-title">
-            User Details
-          </Typography>
-          <Typography variant="body1" className="user-detail-field">
+          <Typography variant="h5">User Details</Typography>
+          <Typography variant="body1">
             <strong>Name:</strong> {user.last_name}
           </Typography>
-          <Typography variant="body1" className="user-detail-field">
+          <Typography variant="body1">
             <strong>Location:</strong> {user.location}
           </Typography>
-          <Typography variant="body1" className="user-detail-field">
+          <Typography variant="body1">
             <strong>Description:</strong> {user.description}
           </Typography>
-          <Typography variant="body1" className="user-detail-field">
+          <Typography variant="body1">
             <strong>Occupation:</strong> {user.occupation}
           </Typography>
-          <Link to={`/photos/${user._id}`} className="user-detail-link">
-            View Photos
-          </Link>
+          <Link to={`/photos/${user._id}`}>View Photos</Link>
         </>
       ) : (
-        <Typography variant="body1" className="user-detail-not-found">
-          User not found!
-        </Typography>
+        <Typography variant="body1">User not found!</Typography>
       )}
     </div>
   );

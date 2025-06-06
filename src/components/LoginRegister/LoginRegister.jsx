@@ -6,16 +6,16 @@ import "./styles.css";
 
 function LoginRegister({ setTrigger }) {
   const [tab, setTab] = useState("login");
-  const [password, setPassword] = useState("");
   const [login_name, setLogin_name] = useState("");
+  const [password, setPassword] = useState("");
+  const [repassword, setRepassword] = useState("");
+  const [first_name, setFirst_name] = useState("");
+  const [last_name, setLast_name] = useState("");
+  const [location, setLocation] = useState("");
+  const [occupation, setOccupation] = useState("");
+  const [description, setDescription] = useState("");
   const [message, setMessage] = useState("");
   const nav = useNavigate();
-  const {
-    register: registerRegister,
-    handleSubmit: handleRegisterSubmit,
-    formState: { errors: registerErrors },
-    reset: resetRegister,
-  } = useForm();
 
   const loginHandle = async () => {
     try {
@@ -52,7 +52,7 @@ function LoginRegister({ setTrigger }) {
     }
   };
 
-  const onRegisterSubmit = async (data) => {
+  const onRegisterSubmit = async () => {
     try {
       const response = await fetch(
         `https://q9zp2l-8081.csb.app/api/user/user`,
@@ -62,14 +62,14 @@ function LoginRegister({ setTrigger }) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            login_name: data.login_name,
-            first_name: data.first_name,
-            last_name: data.last_name,
-            password: data.password,
-            repassword: data.repassword,
-            location: data.location,
-            occupation: data.occupation,
-            description: data.description,
+            login_name: login_name,
+            first_name: first_name,
+            last_name: last_name,
+            password: password,
+            repassword: repassword,
+            location: location,
+            occupation: occupation,
+            description: description,
           }),
         }
       );
@@ -84,21 +84,20 @@ function LoginRegister({ setTrigger }) {
       );
       localStorage.setItem("token", responseData.token);
       localStorage.setItem("user_id", responseData.id);
-      resetRegister();
+      setTab("login");
     } catch (error) {
       setMessage("Failed to register.");
     }
   };
 
   return (
-    <div className="login-register-container">
+    <div>
       {tab === "login" && (
-        <div className="login-form">
+        <div>
           <p>
             Login_name:
             <input
               type="text"
-              className="login-input"
               onChange={(e) => setLogin_name(e.target.value)}
             />
           </p>
@@ -106,134 +105,70 @@ function LoginRegister({ setTrigger }) {
             Password:
             <input
               type="password"
-              className="login-input"
               onChange={(e) => setPassword(e.target.value)}
             />
           </p>
-          <button className="login-button" onClick={() => loginHandle()}>
-            Login
-          </button>
-          <p className="message">{message}</p>
+          <button onClick={() => loginHandle()}>Login</button>
+          <p>{message}</p>
         </div>
       )}
 
       {tab === "register" && (
-        <div className="register-form">
-          <form onSubmit={handleRegisterSubmit(onRegisterSubmit)}>
-            <p>
-              Login name:
-              <input
-                type="text"
-                className="register-input"
-                {...registerRegister("login_name", {
-                  required: "Login name is required.",
-                })}
-              />
-              {registerErrors.login_name && (
-                <span className="error">
-                  {registerErrors.login_name.message}
-                </span>
-              )}
-            </p>
-            <p>
-              Password:
-              <input
-                type="password"
-                className="register-input"
-                {...registerRegister("password", {
-                  required: "Password is required.",
-                })}
-              />
-              {registerErrors.password && (
-                <span className="error">{registerErrors.password.message}</span>
-              )}
-            </p>
-            <p>
-              Xác nhận password:
-              <input
-                type="password"
-                className="register-input"
-                {...registerRegister("repassword", {
-                  required: "Repassword is required.",
-                })}
-              />
-              {registerErrors.repassword && (
-                <span className="error">
-                  {registerErrors.repassword.message}
-                </span>
-              )}
-            </p>
-            <p>
-              First name:
-              <input
-                type="text"
-                className="register-input"
-                {...registerRegister("first_name", {
-                  required: "First name is required.",
-                })}
-              />
-              {registerErrors.first_name && (
-                <span className="error">
-                  {registerErrors.first_name.message}
-                </span>
-              )}
-            </p>
-            <p>
-              Last name:
-              <input
-                type="text"
-                className="register-input"
-                {...registerRegister("last_name", {
-                  required: "Last name is required.",
-                })}
-              />
-              {registerErrors.last_name && (
-                <span className="error">
-                  {registerErrors.last_name.message}
-                </span>
-              )}
-            </p>
-            <p>
-              Location:
-              <input
-                type="text"
-                className="register-input"
-                {...registerRegister("location")}
-              />
-            </p>
-            <p>
-              Description:
-              <input
-                type="text"
-                className="register-input"
-                {...registerRegister("description")}
-              />
-            </p>
-            <p>
-              Occupation:
-              <input
-                type="text"
-                className="register-input"
-                {...registerRegister("occupation")}
-              />
-            </p>
-            <p>
-              <button type="submit" className="register-button">
-                Register
-              </button>
-            </p>
-          </form>
-          <p className="message">{message}</p>
+        <div>
+          <p>
+            Login_name:{" "}
+            <input
+              type="text"
+              onChange={(e) => setLogin_name(e.target.value)}
+            />
+          </p>
+          <p>
+            Password:{" "}
+            <input type="text" onChange={(e) => setPassword(e.target.value)} />
+          </p>
+          <p>
+            Repassword:{" "}
+            <input
+              type="text"
+              onChange={(e) => setRepassword(e.target.value)}
+            />
+          </p>
+          <p>
+            Location:{" "}
+            <input type="text" onChange={(e) => setLocation(e.target.value)} />
+          </p>
+          <p>
+            First_name:{" "}
+            <input
+              type="text"
+              onChange={(e) => setFirst_name(e.target.value)}
+            />
+          </p>
+          <p>
+            Last_name:{" "}
+            <input type="text" onChange={(e) => setLast_name(e.target.value)} />
+          </p>
+          <p>
+            Occupation:{" "}
+            <input
+              type="text"
+              onChange={(e) => setOccupation(e.target.value)}
+            />
+          </p>
+          <p>
+            Description:{" "}
+            <input
+              type="text"
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </p>
+          <button onClick={() => onRegisterSubmit()}>Register</button>
         </div>
       )}
 
-      <div className="switch-tab">
-        <button className="tab-button" onClick={() => setTab("login")}>
-          Login
-        </button>
-        <button className="tab-button" onClick={() => setTab("register")}>
-          Register
-        </button>
+      <div>
+        <button onClick={() => setTab("login")}>Login</button>
+        <button onClick={() => setTab("register")}>Register</button>
       </div>
     </div>
   );

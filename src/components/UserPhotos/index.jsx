@@ -153,49 +153,41 @@ function UserPhotos() {
   };
 
   return (
-    <div className="photos-container">
-      <h2 className="photos-title">Photos of User {user.last_name}</h2>
+    <div>
+      <h2>Photos of User {user.last_name}</h2>
       {photos.map((photo) => (
-        <div key={photo._id} className="photo-card">
+        <div key={photo._id}>
           <img
             src={`https://q9zp2l-8081.csb.app/images/${photo.file_name}`}
             alt=""
-            className="photo-image"
           />
-          <p className="photo-date">Created: {formatDate(photo.date_time)}</p>
-          <div className="photo-comments">
+          <h6>Created: {photo.date_time}</h6>
+          <div>
             {photo.comments?.map((comment) => {
               const user = userComments[comment.user_id];
               return (
-                <div key={comment._id} className="photo-comment">
-                  <p className="photo-comment-meta">
+                <div key={comment._id}>
+                  <p>
                     <strong>
-                      <a
-                        href={`/users/${comment.user_id}`}
-                        className="photo-comment-user"
-                      >
+                      <a href={`/users/${comment.user_id}`}>
                         {user ? `${user.last_name}` : "Unknown User"}
                       </a>
                     </strong>{" "}
-                    at {formatDate(comment.date_time)}:
+                    at <h6>{comment.date_time}:</h6>
                   </p>
-                  <p className="photo-comment-text">{comment.comment}</p>
+                  <p>{comment.comment}</p>
                 </div>
               );
             })}
-            <div className="comment-container">
-              <label className="comment-label">
+            <div>
+              <p>
                 Comment:
                 <input
                   type="text"
-                  className="comment-input"
                   onChange={(e) => setContent(e.target.value)}
                 />
-              </label>
-              <button
-                className="comment-button"
-                onClick={() => commentHandle(photo._id)}
-              >
+              </p>
+              <button onClick={() => commentHandle(photo._id)}>
                 Add Comment
               </button>
             </div>
