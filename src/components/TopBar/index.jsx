@@ -9,7 +9,6 @@ function TopBar() {
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
   const [user, setUser] = useState();
-  const inputRef = useRef(null);
   const nav = useNavigate();
 
   const addPhotoHandle = async () => {
@@ -38,9 +37,6 @@ function TopBar() {
       }
       const data = await res.json();
       setFile(null);
-      if (inputRef.current) {
-        inputRef.current.value = "";
-      }
       nav(`/photos/${user_id}`);
     } catch (error) {
       console.log(error);
@@ -78,24 +74,17 @@ function TopBar() {
       <Toolbar className="topbar-toolbar">
         {/* Trái: Username */}
         <Box className="topbar-left">
-          <Typography variant="h6" className="topbar-username">
-            {token ? "Hello " + user?.first_name : "PhotoShare"}
+          <Typography variant="h6">
+            {token ? "Hello " + user?.last_name : "PhotoShare"}
           </Typography>
         </Box>
 
         {/* Giữa: Add Photo */}
         {token && (
           <Box className="topbar-center">
-            <div className="photo-upload">
-              <input
-                type="file"
-                onChange={(e) => setFile(e.target.files[0])}
-                className="photo-upload-input"
-                ref={inputRef}
-              />
-              <button onClick={addPhotoHandle} className="photo-upload-button">
-                Add Photo
-              </button>
+            <div>
+              <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+              <button onClick={addPhotoHandle}>Add Photo</button>
               <p>{message}</p>
             </div>
           </Box>
@@ -103,15 +92,11 @@ function TopBar() {
 
         {/* Phải: Login / Logout */}
         <Box className="topbar-right">
-          <Typography variant="h6" className="topbar-context">
+          <Typography variant="h6">
             {!token ? (
-              <Link to="/login" className="topbar-link">
-                Please Login
-              </Link>
+              <Link to="/login">Please Login</Link>
             ) : (
-              <Link to="/logout" className="topbar-link">
-                Logout
-              </Link>
+              <Link to="/logout">Logout</Link>
             )}
           </Typography>
         </Box>
