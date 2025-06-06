@@ -3,14 +3,9 @@ import { Typography, Divider } from "@mui/material";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import "./styles.css";
 
-function formatDate(dateStr) {
-  return new Date(dateStr).toLocaleString();
-}
-
 function UserPhotos() {
   const { userId } = useParams();
   const [photos, setPhotos] = useState([]);
-  const [userComments, setUserComments] = useState({});
   const [user, setUser] = useState({});
   const [message, setMessage] = useState("");
   const [content, setContent] = useState("");
@@ -42,8 +37,8 @@ function UserPhotos() {
             return;
           }
         }
-        const photos = await photoResponse.json();
-        setPhotos(photos);
+        const data = await photoResponse.json();
+        setPhotos(data.photos);
       } catch (error) {
         setMessage(error);
       }
@@ -81,44 +76,6 @@ function UserPhotos() {
     fetchPhotos();
   }, [userId, trigger]);
 
-  // Fetch user data for comments
-  useEffect(() => {
-    const userIds = new Set();
-
-    photos.forEach((photo) => {
-      photo.comments?.forEach((comment) => {
-        if (comment.user_id && !userComments[comment.user_id]) {
-          userIds.add(comment.user_id);
-        }
-      });
-    });
-
-    userIds.forEach(async (id) => {
-      try {
-        const res = await fetch(`https://q9zp2l-8081.csb.app/api/user/${id}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (!res.ok) {
-          if (res.status === 401 || res.status === 403) {
-            nav("/login");
-          }
-        }
-        const user = await res.json();
-        setUserComments((prev) => ({
-          ...prev,
-          [id]: user,
-        }));
-      } catch (error) {
-        console.error("Error fetching user", id, error);
-      }
-    });
-  }, [photos, trigger]);
-
-  //
   const commentHandle = async (id) => {
     try {
       const res = await fetch(
@@ -155,27 +112,22 @@ function UserPhotos() {
   return (
     <div>
       <h2>Photos of User {user.last_name}</h2>
-      {photos.map((photo) => (
-        <div key={photo._id}>
+      {photos.map((photo, photo_index) => (
+        <div key={photo_index}>
           <img
             src={`https://q9zp2l-8081.csb.app/images/${photo.file_name}`}
             alt=""
           />
           <h6>Created: {photo.date_time}</h6>
           <div>
-            {photo.comments?.map((comment) => {
-              const user = userComments[comment.user_id];
+            {photo.comments?.map((comment, comment_index) => {
               return (
-                <div key={comment._id}>
+                <div key={comment_index}>
                   <p>
-                    <strong>
-                      <a href={`/users/${comment.user_id}`}>
-                        {user ? `${user.last_name}` : "Unknown User"}
-                      </a>
-                    </strong>{" "}
-                    at <h6>{comment.date_time}:</h6>
+                    <b>{comment.user && comment.user.last_name}:</b>
+                    {comment.comment}
                   </p>
-                  <p>{comment.comment}</p>
+                  <h6>{comment.date_time}</h6>
                 </div>
               );
             })}
@@ -187,11 +139,12 @@ function UserPhotos() {
                   onChange={(e) => setContent(e.target.value)}
                 />
               </p>
-              <button onClick={() => commentHandle(photo._id)}>
+              <button onClick={() => commentHandle(photo.id)}>
                 Add Comment
               </button>
             </div>
           </div>
+          <hr />
         </div>
       ))}
     </div>
